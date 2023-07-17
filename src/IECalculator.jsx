@@ -107,10 +107,10 @@ const IECalculator = () => {
         }
     }
     
-    function truncate8decimal (number) {
+    // function truncate8decimal (number) {
 
-        return parseFloat(number.toFixed(8)).toString();
-    }
+    //     return parseFloat(number.toFixed(8)).toString();
+    // }
     
 
     function backspace () {

@@ -7,7 +7,7 @@ function App() {
   return (
     <>
     <h1>Immediate Execution Calculator</h1>
-      <IECalculator />
+      {/* <IECalculator /> */}
     <h1>Formula Logic Calculator</h1>
       <FLCalculator />
     </>
