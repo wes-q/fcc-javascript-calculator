@@ -23,17 +23,58 @@ const FLCalculator = () => {
         // TODO Add commas function
     }
 
+/*
+if - 
+    if operator 
+        if - is the operator
+            do nothing
+        else 
+            append -
+    else (number) execute
+            
+if + / *
+    if number execute
+    if operator 
+*/
            
     function handleOperatorClick (op) {
         const operators = ['+','-','*','/'];
 
-        // 1) Concat display into equationDisplay
-        setEquationDisplay(prevEquationDisplay => {
-            return prevEquationDisplay + display
-        });
-
-        // 2) Show operator on display
-        setDisplay(op);
+        if (op === "-") { // Allow negative numbers logic
+            if (operators.includes(display)) { //
+                if (display === "-") {
+                    return
+                } else {
+                    setDisplay(prevDisplay => {
+                        return prevDisplay + "-"
+                    });
+                }
+            } else {
+                // 1) Concat display into equationDisplay
+                setEquationDisplay(prevEquationDisplay => {
+                    return prevEquationDisplay + display
+                });
+        
+                // 2) Show operator on display
+                setDisplay(op);
+            }
+            
+        } else { // If pressed + * or /
+            // alert("* pressed")
+            if (!isNaN(display)) { // If displayed is a number
+                // alert("displayed is number")
+                // 1) Concat display into equationDisplay
+                setEquationDisplay(prevEquationDisplay => {
+                    return prevEquationDisplay + display
+                });
+        
+                // 2) Show operator on display
+                setDisplay(op);
+            } else { // If displayed is not a number (operator or operators)
+                // alert("displayed is operator")
+                setDisplay(op);
+            }
+        }
     }
   
     function handleEqualClick () {
