@@ -7,6 +7,7 @@ const FLCalculator = () => {
     
     function ac () {
         setDisplay('0');
+        setEquationDisplay("");
     }
 
     function handleClickDigit (digit) {        
