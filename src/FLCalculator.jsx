@@ -1,8 +1,10 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react'
 
 const FLCalculator = () => {
     const [display, setDisplay] = useState('0');
-
+    const [equationDisplay, setEquationDisplay] = useState("");
+    
     function ac () {
         setDisplay('0');
     }
@@ -22,72 +24,43 @@ const FLCalculator = () => {
 
            
     function handleOperatorClick (op) {
-        const operators = ['+','-','x','/'];
+        const operators = ['+','-','*','/'];
 
-        setDisplay(prevDisplay => {
-            const lastCharacter = prevDisplay[prevDisplay.length - 1];
-
-            if (prevDisplay === '0') { 
-                return op
-            } else if (operators.includes(lastCharacter)) {
-
-                return prevDisplay.slice(0, -1) + op;
-            } else {
-                return prevDisplay + op
-            } // TODO add handling of decimal
+        // 1) Concat display into equationDisplay
+        setEquationDisplay(prevEquationDisplay => {
+            return prevEquationDisplay + display
         });
-    }
 
-
-    function computeExpression(expression) {
-        const operators = {
-          '+': (a, b) => a + b,
-          '-': (a, b) => a - b,
-          'x': (a, b) => a * b,
-          '/': (a, b) => a / b,
-        };
-      
-        const operatorPriority = {
-          '+': 1,
-          '-': 1,
-          'x': 2,
-          '/': 2,
-        };
-      
-        const outputStack = [];
-        const operatorStack = [];
-      
-        for (const elem of expression) {
-          if (!isNaN(elem)) {
-            outputStack.push(Number(elem));
-          } else if (elem in operators) {
-            while (
-              operatorStack.length > 0 &&
-              operatorPriority[operatorStack[operatorStack.length - 1]] >= operatorPriority[elem]
-            ) {
-              const operator = operatorStack.pop();
-              const b = outputStack.pop();
-              const a = outputStack.pop();
-              outputStack.push(operators[operator](a, b));
-            }
-            operatorStack.push(elem);
-          }
-        }
-      
-        while (operatorStack.length > 0) {
-          const operator = operatorStack.pop();
-          const b = outputStack.pop();
-          const a = outputStack.pop();
-          outputStack.push(operators[operator](a, b));
-        }
-      
-        return outputStack[0];
+        // 2) Show operator on display
+        setDisplay(op);
     }
   
     function handleEqualClick () {
-        setDisplay(computeExpression(display));
-    }
+        // 1) Concat display into equationDisplay
+        const x = equationDisplay + display;
         
+        // 2) Show answer on display
+        setDisplay(prevDisplay => eval(x).toString());
+
+        // 3) Clear equationDisplay
+        setEquationDisplay("");
+    }
+    
+    function handleClickDecimal () {
+        const operators = ['+','-','*','/'];
+
+        setDisplay(prevDisplay => {
+            const lastCharacter = prevDisplay[prevDisplay.length - 1];
+            
+            if (operators.includes(lastCharacter)) { //if last char is operator then add a 0 before decimal
+                return prevDisplay + "0."
+            } else if (!prevDisplay.includes(".")) {  //if last char is number and doesn't include . then append .
+                return prevDisplay + "."
+            } else {
+                return prevDisplay
+            }
+        });
+    }
 
     // function truncate8decimal (number) {
 
@@ -107,8 +80,6 @@ const FLCalculator = () => {
     return (
         <div className='container'>
 
-            <button id="equals" onClick={handleEqualClick}>=</button>
-
             <button id='zero' onClick={() => handleClickDigit('0')}>0</button>
             <button id='one' onClick={() => handleClickDigit('1')}>1</button>
             <button id='two' onClick={() => handleClickDigit('2')}>2</button>
@@ -119,16 +90,18 @@ const FLCalculator = () => {
             <button id='seven' onClick={() => handleClickDigit('7')}>7</button>
             <button id='eight' onClick={() => handleClickDigit('8')}>8</button>
             <button id='nine' onClick={() => handleClickDigit('9')}>9</button>
-            <div id='decimal'>.</div>
-            
+            <div id='decimal' onClick={handleClickDecimal}>.</div>
+            <div id="equals" onClick={handleEqualClick}>=</div>
+
             <div id='add' onClick={() => handleOperatorClick('+')}>+</div>
             <div id='subtract' onClick={() => handleOperatorClick('-')}>-</div>
-            <div id='multiply' onClick={() => handleOperatorClick('x')}>x</div>
+            <div id='multiply' onClick={() => handleOperatorClick('*')}>x</div>
             <div id='divide' onClick={() => handleOperatorClick('/')}>÷</div>
             
             <div id='clear' onClick={ac}>AC</div>
             <div id='backspace' onClick={backspace}>⌫</div>
 
+            <div id='equationDisplay'>{equationDisplay}</div>
             <div id='display'>{display}</div>
 
         </div>        
