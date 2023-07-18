@@ -40,8 +40,12 @@ const FLCalculator = () => {
         // 1) Concat display into equationDisplay
         const x = equationDisplay + display;
         
+        // // 2) Show answer on display
+        // setDisplay(prevDisplay => eval(x).toString());
+
         // 2) Show answer on display
-        setDisplay(prevDisplay => eval(x).toString());
+        const result = new Function('return ' + x)();
+        setDisplay(result.toString());
 
         // 3) Clear equationDisplay
         setEquationDisplay("");
