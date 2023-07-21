@@ -1,3 +1,6 @@
+import { evaluate } from 'mathjs';
+import React from 'react';
+
 /* eslint-disable no-unused-vars */
 import { useState } from 'react'
 
@@ -5,12 +8,12 @@ const FLCalculator = () => {
     const [display, setDisplay] = useState('0');
     const [equationDisplay, setEquationDisplay] = useState("");
     
-    function ac () {
+    function ac (): void {
         setDisplay('0');
         setEquationDisplay("");
     }
 
-    function handleClickDigit (digit) {        
+    function handleClickDigit (digit: string): void {        
 
         setDisplay(prevDisplay => {
             if (prevDisplay === '0') {
@@ -36,12 +39,15 @@ if + / *
     if number execute
     if operator 
 */
-           
-    function handleOperatorClick (op) {
-        const operators = ['+','-','*','/'];
+
+    // function handleOperatorClick(op: Operator): void {
+    function handleOperatorClick (op : string): void {
+        type Operator = '+' | '-' | '*' | '/';
+        const operators: Operator[] = ['+', '-', '*', '/'];
+        const operatorDisplay = display as Operator; // To prevent type mismatch, declare new variable as the type
 
         if (op === "-") { // Allow negative numbers logic
-            if (operators.includes(display)) { //
+            if (operators.includes(operatorDisplay)) {
                 if (display === "-") {
                     return
                 } else {
@@ -61,8 +67,8 @@ if + / *
             
         } else { // If pressed + * or /
             // alert("* pressed")
-            if (!isNaN(display)) { // If displayed is a number
-                // alert("displayed is number")
+            const numbervalue = parseInt(display)
+            if (!isNaN(numbervalue)) { // If displayed is a number
                 // 1) Concat display into equationDisplay
                 setEquationDisplay(prevEquationDisplay => {
                     return prevEquationDisplay + display
@@ -77,15 +83,12 @@ if + / *
         }
     }
   
-    function handleEqualClick () {
+    function handleEqualClick () : void {
         // 1) Concat display into equationDisplay
-        const x = equationDisplay + display;
-        
-        // // 2) Show answer on display
-        // setDisplay(prevDisplay => eval(x).toString());
+        const x : string = equationDisplay + display;
+        const result = evaluate(x) as number; // Evaluate the string equation into a number
 
         // 2) Show answer on display
-        const result = new Function('return ' + x)();
         setDisplay(result.toString());
 
         // 3) Clear equationDisplay
@@ -125,7 +128,6 @@ if + / *
     
     return (
         <div className='container'>
-
             <button id='zero' onClick={() => handleClickDigit('0')}>0</button>
             <button id='one' onClick={() => handleClickDigit('1')}>1</button>
             <button id='two' onClick={() => handleClickDigit('2')}>2</button>
@@ -136,19 +138,19 @@ if + / *
             <button id='seven' onClick={() => handleClickDigit('7')}>7</button>
             <button id='eight' onClick={() => handleClickDigit('8')}>8</button>
             <button id='nine' onClick={() => handleClickDigit('9')}>9</button>
-            <div id='decimal' onClick={handleClickDecimal}>.</div>
-            <div id="equals" onClick={handleEqualClick}>=</div>
+            <button id='decimal' onClick={handleClickDecimal}>.</button>
+            <button id="equals" onClick={handleEqualClick}>=</button>
 
-            <div id='add' onClick={() => handleOperatorClick('+')}>+</div>
-            <div id='subtract' onClick={() => handleOperatorClick('-')}>-</div>
-            <div id='multiply' onClick={() => handleOperatorClick('*')}>x</div>
-            <div id='divide' onClick={() => handleOperatorClick('/')}>÷</div>
+            <button id='add' onClick={() => handleOperatorClick('+')}>+</button>
+            <button id='subtract' onClick={() => handleOperatorClick('-')}>-</button>
+            <button id='multiply' onClick={() => handleOperatorClick('*')}>x</button>
+            <button id='divide' onClick={() => handleOperatorClick('/')}>÷</button>
             
-            <div id='clear' onClick={ac}>AC</div>
-            <div id='backspace' onClick={backspace}>⌫</div>
+            <button id='clear' onClick={ac}>AC</button>
+            <button id='backspace' onClick={backspace}>⌫</button>
 
-            <div id='equationDisplay'>{equationDisplay}</div>
-            <div id='display'>{display}</div>
+            <button id='equationDisplay'>{equationDisplay}</button>
+            <button id='display'>{display}</button>
 
         </div>        
     );
